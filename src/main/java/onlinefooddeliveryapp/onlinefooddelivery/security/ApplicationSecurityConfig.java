@@ -1,5 +1,6 @@
-package onlinefooddeliveryapp.onlinefooddelivery;
+package onlinefooddeliveryapp.onlinefooddelivery.security;
 
+import onlinefooddeliveryapp.onlinefooddelivery.security.jwt.JwtAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -19,7 +20,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
         prePostEnabled = true
 )
 public class ApplicationSecurityConfig{
-    private final UnAuthorizedEntryPoint  unAuthorizedEntryPoint;
+    private final UnAuthorizedEntryPoint unAuthorizedEntryPoint;
 
     public ApplicationSecurityConfig(UnAuthorizedEntryPoint unAuthorizedEntryPoint) {
         this.unAuthorizedEntryPoint = unAuthorizedEntryPoint;
@@ -30,7 +31,7 @@ public class ApplicationSecurityConfig{
         http.cors().and().csrf().disable()
                 .authorizeHttpRequests(authorize -> {
                     try {
-                        authorize.requestMatchers("/**/auth/**").permitAll()
+                        authorize.requestMatchers("/**/api/v1/auth/**").permitAll()
                                 .requestMatchers("/customError").permitAll()
                                 .requestMatchers("/access-denied").permitAll()
                                 .anyRequest().authenticated()

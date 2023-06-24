@@ -1,7 +1,6 @@
 package onlinefooddeliveryapp.onlinefooddelivery.controller;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import onlinefooddeliveryapp.onlinefooddelivery.TokenProvider;
 import onlinefooddeliveryapp.onlinefooddelivery.dao.model.AuthToken;
 import onlinefooddeliveryapp.onlinefooddelivery.dao.model.MenuItems;
 import onlinefooddeliveryapp.onlinefooddelivery.dao.model.Restaurants;
@@ -12,6 +11,8 @@ import onlinefooddeliveryapp.onlinefooddelivery.dto.request.UserLoginRequestMode
 import onlinefooddeliveryapp.onlinefooddelivery.exception.OrderAlreadyExistException;
 import onlinefooddeliveryapp.onlinefooddelivery.exception.OrderCannotBeFoundException;
 import onlinefooddeliveryapp.onlinefooddelivery.exception.UserCannotBeFoundException;
+import onlinefooddeliveryapp.onlinefooddelivery.security.jwt.TokenProvider;
+import onlinefooddeliveryapp.onlinefooddelivery.service.RestaurantService;
 import onlinefooddeliveryapp.onlinefooddelivery.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,9 +27,10 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/v1/auth")
-public class UserController {
+public class Controller {
 
     private final UserService userService;
+    private final RestaurantService restaurantService;
     private final AuthenticationManager authenticationManager;
     private final TokenProvider tokenProvider;
 
@@ -51,6 +53,14 @@ public class UserController {
         Users user = userService.findUserByEmail(loginRequest.getEmail());
         return new ResponseEntity<>(new AuthToken(token, user.getId()), HttpStatus.OK);
     }
+
+    @PostMapping("/restaurant")
+    public ResponseEntity<?> addNewRestaurant(@RequestBody  Restaurants restaurants)  {
+        Restaurants savedRestaurant = restaurantService.addNewResstaurant(restaurants);
+        return new ResponseEntity<>(savedRestaurant, HttpStatus.OK);
+    }
+
+
 
 
 

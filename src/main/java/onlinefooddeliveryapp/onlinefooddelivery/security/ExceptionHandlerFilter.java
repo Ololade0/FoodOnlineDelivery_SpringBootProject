@@ -1,4 +1,4 @@
-package onlinefooddeliveryapp.onlinefooddelivery;
+package onlinefooddeliveryapp.onlinefooddelivery.security;
 
 
 import io.jsonwebtoken.JwtException;

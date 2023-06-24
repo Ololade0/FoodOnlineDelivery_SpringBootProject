@@ -1,4 +1,4 @@
-package onlinefooddeliveryapp.onlinefooddelivery;
+package onlinefooddeliveryapp.onlinefooddelivery.security.jwt;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
