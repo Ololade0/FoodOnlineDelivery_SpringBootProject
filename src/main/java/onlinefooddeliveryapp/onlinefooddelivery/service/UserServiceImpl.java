@@ -1,25 +1,31 @@
 package onlinefooddeliveryapp.onlinefooddelivery.service;
 
-import com.example.onlinefooddelivery.dao.model.MenuItems;
-import com.example.onlinefooddelivery.dao.model.Order;
-import com.example.onlinefooddelivery.dao.model.Restaurants;
-import com.example.onlinefooddelivery.dao.model.Users;
-import com.example.onlinefooddelivery.dao.repository.UserRepository;
-import com.example.onlinefooddelivery.dto.request.PlaceOrderRequest;
-import com.example.onlinefooddelivery.dto.request.SignUpUserRequest;
-import com.example.onlinefooddelivery.exception.OrderAlreadyExistException;
-import com.example.onlinefooddelivery.exception.OrderCannotBeFoundException;
-import com.example.onlinefooddelivery.exception.RestaurantCannotBeFound;
-import com.example.onlinefooddelivery.exception.UserCannotBeFoundException;
+
 import lombok.RequiredArgsConstructor;
+import onlinefooddeliveryapp.onlinefooddelivery.dao.model.*;
+import onlinefooddeliveryapp.onlinefooddelivery.dao.repository.UserRepository;
+import onlinefooddeliveryapp.onlinefooddelivery.dto.request.PlaceOrderRequest;
+import onlinefooddeliveryapp.onlinefooddelivery.dto.request.SignUpUserRequest;
+import onlinefooddeliveryapp.onlinefooddelivery.exception.OrderAlreadyExistException;
+import onlinefooddeliveryapp.onlinefooddelivery.exception.OrderCannotBeFoundException;
+import onlinefooddeliveryapp.onlinefooddelivery.exception.RestaurantCannotBeFound;
+import onlinefooddeliveryapp.onlinefooddelivery.exception.UserCannotBeFoundException;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements UserService, UserDetailsService {
     private final UserRepository userRepository;
     private final RestaurantService restaurantService;
     private final AddressService addressService;
@@ -99,21 +105,24 @@ public class UserServiceImpl implements UserService {
     }
         throw new UserCannotBeFoundException("User cannot be found");
 
-//    @Override
-//    public String userCanPlaceOrderInARestaurant(String restaurantId, String id) {
-//        Optional<Users> foundUsers =   userRepository.findById(id);
-//        Restaurants browsedRestaurant = restaurantService.browseRestaurantById(restaurantId);
-//        if(foundUsers.isPresent()) {
-//            if(browsedRestaurant!=null){
-//                orderService.placedOrders()
-//
-//            }
-//
-//            }
+
     }
 
 
-}
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+
+            Users user = userRepository.findUsersByEmail(username).orElse(null);
+            if(user!= null){
+                return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), getAuthorities(user.getRoleHashSet()));
+            }
+            return null;
+        }
+
+        private Collection<? extends GrantedAuthority> getAuthorities(Set<Role> roleHashSet) {
+            return roleHashSet.stream().map(role -> new SimpleGrantedAuthority(role.getRoleType().name())).collect(Collectors.toSet());
+        }
+    }
 
 
 

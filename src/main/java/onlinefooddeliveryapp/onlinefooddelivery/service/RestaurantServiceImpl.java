@@ -1,16 +1,13 @@
 package onlinefooddeliveryapp.onlinefooddelivery.service;
 
-import com.example.onlinefooddelivery.dao.model.MenuItems;
-import com.example.onlinefooddelivery.dao.model.Restaurants;
-import com.example.onlinefooddelivery.dao.repository.RestaurantRepository;
-import com.example.onlinefooddelivery.dto.request.AddMenuItemRequest;
-import com.example.onlinefooddelivery.dto.request.FindAllRestaurantRequest;
-import com.example.onlinefooddelivery.dto.response.AddMenuItemResponse;
-import com.example.onlinefooddelivery.exception.RestaurantCannotBeFound;
+
 import lombok.RequiredArgsConstructor;
 import onlinefooddeliveryapp.onlinefooddelivery.dao.model.MenuItems;
 import onlinefooddeliveryapp.onlinefooddelivery.dao.model.Restaurants;
 import onlinefooddeliveryapp.onlinefooddelivery.dao.repository.RestaurantRepository;
+import onlinefooddeliveryapp.onlinefooddelivery.dto.request.AddMenuItemRequest;
+import onlinefooddeliveryapp.onlinefooddelivery.dto.request.FindAllRestaurantRequest;
+import onlinefooddeliveryapp.onlinefooddelivery.dto.response.AddMenuItemResponse;
 import onlinefooddeliveryapp.onlinefooddelivery.exception.RestaurantCannotBeFound;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -39,25 +36,6 @@ public class RestaurantServiceImpl implements RestaurantService {
         return restaurantRepository.save(restaurants);
     }
 
-//    @Service
-//    public class RestaurantService {
-//        @Autowired
-//        private RestaurantRepository restaurantRepository;
-//        @Autowired
-//        private MenuItemService menuItemService;
-//
-//        public Restaurant addRestaurant(AddRestaurantRequest newRestaurant) {
-//            Restaurant restaurant = Restaurant.builder()
-//                    .restaurantName(newRestaurant.getRestaurantName())
-//                    .location(newRestaurant.getLocation())
-//                    .contactAddress(newRestaurant.getContactAddress())
-//                    .build();
-//            restaurant = restaurantRepository.save(restaurant);
-//            List<MenuItems> menuItems = menuItemService.addMenu(newRestaurant.getAddMenuItemRequest(), restaurant.getId());
-//            restaurant.setMenuItemsList(menuItems);
-//            return restaurantRepository.save(restaurant);
-//        }
-//    }
 
     @Override
     public Restaurants browseRestaurantById(String restaurantId) {

@@ -1,6 +1,4 @@
 package onlinefooddeliveryapp.onlinefooddelivery.controller;
-
-
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import onlinefooddeliveryapp.onlinefooddelivery.dao.model.MenuItems;
@@ -8,6 +6,7 @@ import onlinefooddeliveryapp.onlinefooddelivery.dao.model.Restaurants;
 import onlinefooddeliveryapp.onlinefooddelivery.dao.model.Users;
 import onlinefooddeliveryapp.onlinefooddelivery.dto.request.PlaceOrderRequest;
 import onlinefooddeliveryapp.onlinefooddelivery.dto.request.SignUpUserRequest;
+import onlinefooddeliveryapp.onlinefooddelivery.exception.OrderAlreadyExistException;
 import onlinefooddeliveryapp.onlinefooddelivery.exception.OrderCannotBeFoundException;
 import onlinefooddeliveryapp.onlinefooddelivery.service.UserService;
 import org.springframework.http.HttpStatus;
@@ -44,7 +43,7 @@ public class UserController {
     }
 
     @PostMapping("/placeOrder")
-    public ResponseEntity<?> userCanPlaceOrderInARestaurant(@RequestBody PlaceOrderRequest placeOrderRequest) throws OrderCannotBeFoundException, OrderAlreadyExistException {
+    public ResponseEntity<?> userCanPlaceOrderInARestaurant(@RequestBody PlaceOrderRequest placeOrderRequest) throws OrderCannotBeFoundException, OrderAlreadyExistException, OrderAlreadyExistException {
         Users placeOrder = userService.userCanPlaceOrderInARestaurant(placeOrderRequest);
         return new ResponseEntity<>(placeOrder, HttpStatus.OK);
     }

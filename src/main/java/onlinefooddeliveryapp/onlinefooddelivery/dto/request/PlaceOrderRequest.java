@@ -1,9 +1,6 @@
 
 package onlinefooddeliveryapp.onlinefooddelivery.dto.request;
 
-
-import com.example.onlinefooddelivery.dao.model.Address;
-import com.example.onlinefooddelivery.dao.model.OrderStatus;
 import lombok.*;
 import onlinefooddeliveryapp.onlinefooddelivery.dao.model.Address;
 import onlinefooddeliveryapp.onlinefooddelivery.dao.model.OrderStatus;

@@ -1,11 +1,12 @@
 package onlinefooddeliveryapp.onlinefooddelivery;
 
-import com.example.onlinefooddelivery.exception.APIError;
+
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import onlinefooddeliveryapp.onlinefooddelivery.exception.APIError;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.filter.OncePerRequestFilter;
 

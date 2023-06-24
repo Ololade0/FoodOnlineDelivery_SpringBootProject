@@ -6,7 +6,9 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Setter
 @Getter
@@ -28,4 +30,22 @@ public class Users {
 
         @DBRef
         private List<Address> addressList = new ArrayList<>();
+
+        @DBRef
+        private Set<Role> roleHashSet = new HashSet<>();
+
+
+        public Users(String firstName, String lastName, String email, String phoneNo, String password,  RoleType roleType) {
+                this.firstName = firstName;
+                this.lastName = lastName;
+                this.email = email;
+                this.phoneNo = phoneNo;
+                this.password = password;
+                this.addressList = new ArrayList<>();
+                if (roleHashSet == null) {
+                        roleHashSet = new HashSet<>();
+                        roleHashSet.add(new Role(roleType));
+
+                }
+        }
 }
