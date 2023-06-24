@@ -60,11 +60,17 @@ public class Controller {
         return new ResponseEntity<>(savedRestaurant, HttpStatus.OK);
     }
 
+    @GetMapping("id/{restaurantId}")
+    public ResponseEntity<?> userCanBrowseRestaurantById(String userId, @PathVariable String restaurantId )  {
+        Restaurants savedRestaurant = userService.userCanBrowseRestaurantById(userId,restaurantId);
+        return new ResponseEntity<>(savedRestaurant, HttpStatus.OK);
+    }
 
 
 
 
-    @GetMapping("/{restaurantName}")
+
+    @GetMapping("name=/{restaurantName}")
     public ResponseEntity<?> browseRestaurantName(@RequestBody  String userId, @PathVariable String restaurantName)  {
         Restaurants restaurants = userService.userCanBrowseRestaurantByRestaurantName(userId, restaurantName);
         return new ResponseEntity<>(restaurants, HttpStatus.OK);
@@ -72,11 +78,6 @@ public class Controller {
 
 
 
-    @GetMapping("/{restaurantId}")
-    public ResponseEntity<?> browseRestaurantById(@RequestBody  String userId, @PathVariable String restaurantId)  {
-        Restaurants restaurants = userService.userCanBrowseRestaurantById(userId, restaurantId);
-        return new ResponseEntity<>(restaurants, HttpStatus.OK);
-    }
 
     @PostMapping("/placeOrder")
     public ResponseEntity<?> userCanPlaceOrderInARestaurant(@RequestBody PlaceOrderRequest placeOrderRequest) throws OrderCannotBeFoundException, OrderAlreadyExistException, OrderAlreadyExistException {

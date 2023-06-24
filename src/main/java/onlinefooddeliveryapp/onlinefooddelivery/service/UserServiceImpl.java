@@ -69,7 +69,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         Restaurants browsedRestaurant = restaurantService.browseRestaurantById(restaurantId);
         Optional<Users> foundUser = userRepository.findById(id);
         if (foundUser.isPresent() && browsedRestaurant != null) {
-
             return browsedRestaurant;
             }
 
