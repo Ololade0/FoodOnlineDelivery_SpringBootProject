@@ -21,10 +21,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -34,6 +31,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     private final RestaurantService restaurantService;
 
     private final OrderService orderService;
+    private final RoleService roleService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Override
@@ -48,7 +46,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                     .lastName(signUpUserRequest.getLastName())
                     .password(bCryptPasswordEncoder.encode(signUpUserRequest.getPassword()))
                     .phoneNo(signUpUserRequest.getPhoneNo())
+                    .roleHashSet(new HashSet<>())
                     .build();
+        Role userRole = new Role(RoleType.ROLE_USER);
+        userRole = roleService.save(userRole);
+        signUser.getRoleHashSet().add(userRole);
         return userRepository.save(signUser);
         }
 

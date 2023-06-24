@@ -17,7 +17,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Role {
     @Id
 
-    private Long id;
+    private String id;
     private RoleType roleType;
 
        public Role(RoleType roleType) {
