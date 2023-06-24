@@ -1,7 +1,8 @@
 package onlinefooddeliveryapp.onlinefooddelivery.config;
 
-import art.sales.ArtsalesManagement.dao.repository.UserRepository;
+
 import lombok.extern.slf4j.Slf4j;
+import onlinefooddeliveryapp.onlinefooddelivery.dao.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;

@@ -6,15 +6,19 @@ import onlinefooddeliveryapp.onlinefooddelivery.dao.model.*;
 import onlinefooddeliveryapp.onlinefooddelivery.dao.repository.UserRepository;
 import onlinefooddeliveryapp.onlinefooddelivery.dto.request.PlaceOrderRequest;
 import onlinefooddeliveryapp.onlinefooddelivery.dto.request.SignUpUserRequest;
+import onlinefooddeliveryapp.onlinefooddelivery.dto.request.UserLoginRequestModel;
+import onlinefooddeliveryapp.onlinefooddelivery.dto.response.UserLoginResponse;
 import onlinefooddeliveryapp.onlinefooddelivery.exception.OrderAlreadyExistException;
 import onlinefooddeliveryapp.onlinefooddelivery.exception.OrderCannotBeFoundException;
 import onlinefooddeliveryapp.onlinefooddelivery.exception.RestaurantCannotBeFound;
 import onlinefooddeliveryapp.onlinefooddelivery.exception.UserCannotBeFoundException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
@@ -28,8 +32,9 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService, UserDetailsService {
     private final UserRepository userRepository;
     private final RestaurantService restaurantService;
-    private final AddressService addressService;
+
     private final OrderService orderService;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Override
     public Users signUpUser(SignUpUserRequest signUpUserRequest) {
@@ -41,10 +46,21 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                     .email(signUpUserRequest.getEmail())
                     .firstName(signUpUserRequest.getFirstName())
                     .lastName(signUpUserRequest.getLastName())
+                    .password(bCryptPasswordEncoder.encode(signUpUserRequest.getPassword()))
                     .phoneNo(signUpUserRequest.getPhoneNo())
                     .build();
         return userRepository.save(signUser);
         }
+
+    @Override
+    public Users findUserByEmail(String email) {
+      Optional<Users> foundUser =  userRepository.findUsersByEmail(email);
+      if(foundUser.isPresent()){
+          return foundUser.get();
+      }
+      throw new UserCannotBeFoundException("User cannot be found");
+    }
+
 
     @Override
     public Restaurants userCanBrowseRestaurantById(String id, String restaurantId) {
@@ -105,9 +121,25 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
         throw new UserCannotBeFoundException("User cannot be found");
 
+    }
+
+
+    @Override
+    public UserLoginResponse login(UserLoginRequestModel userLoginRequestModel) {
+        var user = userRepository.findUsersByEmail(userLoginRequestModel.getEmail());
+        if(user.isPresent() && user.get().getPassword().equals(userLoginRequestModel.getPassword()));
+        return   buildSuccessfulLoginResponse(user.get());
 
     }
 
+
+    private UserLoginResponse buildSuccessfulLoginResponse(Users user) {
+        return UserLoginResponse.builder()
+                .code(200)
+                .message("Login successful")
+                .build();
+
+    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

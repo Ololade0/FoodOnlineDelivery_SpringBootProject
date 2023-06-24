@@ -5,6 +5,8 @@ import onlinefooddeliveryapp.onlinefooddelivery.dao.model.Restaurants;
 import onlinefooddeliveryapp.onlinefooddelivery.dao.model.Users;
 import onlinefooddeliveryapp.onlinefooddelivery.dto.request.PlaceOrderRequest;
 import onlinefooddeliveryapp.onlinefooddelivery.dto.request.SignUpUserRequest;
+import onlinefooddeliveryapp.onlinefooddelivery.dto.request.UserLoginRequestModel;
+import onlinefooddeliveryapp.onlinefooddelivery.dto.response.UserLoginResponse;
 import onlinefooddeliveryapp.onlinefooddelivery.exception.OrderAlreadyExistException;
 import onlinefooddeliveryapp.onlinefooddelivery.exception.OrderCannotBeFoundException;
 
@@ -22,4 +24,7 @@ public interface UserService {
     Users userCanPlaceOrderInARestaurant(PlaceOrderRequest placeOrderRequest) throws OrderCannotBeFoundException,  OrderAlreadyExistException;
 
 
+    UserLoginResponse login(UserLoginRequestModel userLoginRequestModel);
+
+    Users findUserByEmail(String email);
 }
