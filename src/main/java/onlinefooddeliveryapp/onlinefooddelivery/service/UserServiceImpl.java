@@ -205,6 +205,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             if(browsedRestaurant!=null){
              foundUsers.get().getOrdersList().add(placedOrder);
                return userRepository.save(foundUsers.get());
+
             }
             throw new RestaurantCannotBeFound("Restaurant Cannot be found");
     }

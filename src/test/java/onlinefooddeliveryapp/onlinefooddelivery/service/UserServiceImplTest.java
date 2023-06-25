@@ -210,7 +210,8 @@ class UserServiceImplTest {
                 .id(registeredUser.getId())
                 .ordered_at(LocalDateTime.now())
                 .orderStatus(OrderStatus.PLACED_ORDER)
-                .totalPrice(BigDecimal.valueOf(2000))
+                .itemPrice(BigDecimal.valueOf(100))
+                .totalPrice(calculateTotalPrice(new PlaceOrderRequest()))
                 .deliveryTime(LocalDateTime.now())
                 .address(Address.builder()
                         .area("Yaba Area")
@@ -222,9 +223,19 @@ class UserServiceImplTest {
                 .build();
         Users userThatPlacedOrders =  userServices.userCanPlaceOrderInARestaurant(placeOrderRequest);
         assertThat(userThatPlacedOrders.getOrdersList()).isNotNull();
-        assertEquals(BigDecimal.valueOf(20000), userThatPlacedOrders.getOrdersList().get(0).getItemPrice());
+        assertEquals(BigDecimal.valueOf(1000), userThatPlacedOrders.getOrdersList().get(0).getTotalPrice());
+        assertEquals(BigDecimal.valueOf(100), userThatPlacedOrders.getOrdersList().get(0).getItemPrice());
 
 
+
+    }
+
+    public BigDecimal calculateTotalPrice(PlaceOrderRequest placeOrderRequest) {
+        BigDecimal total = BigDecimal.ZERO;
+        if (placeOrderRequest.getTotalPrice() != null && placeOrderRequest.getQuantity() != null) {
+            total = placeOrderRequest.getTotalPrice().multiply(BigDecimal.valueOf(placeOrderRequest.getQuantity()));
+        }
+        return total;
     }
 
 

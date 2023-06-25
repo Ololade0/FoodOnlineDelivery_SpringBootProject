@@ -51,7 +51,7 @@ public class OrderlServiceImpl implements OrderService{
 	public BigDecimal calculateTotalPrice(PlaceOrderRequest placeOrderRequest) {
 		BigDecimal total = BigDecimal.ZERO;
 		if (placeOrderRequest.getTotalPrice() != null && placeOrderRequest.getQuantity() != null) {
-			total = placeOrderRequest.getTotalPrice().multiply(BigDecimal.valueOf(placeOrderRequest.getQuantity()));
+			total = placeOrderRequest.getItemPrice().multiply(BigDecimal.valueOf(placeOrderRequest.getQuantity()));
 		}
 		return total;
 	}
