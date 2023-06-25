@@ -36,6 +36,7 @@ public class OrderlServiceImpl implements OrderService{
 				.quantity(placeOrderRequest.getQuantity())
 				.deliveryTime(placeOrderRequest.getDeliveryTime())
 				.totalPrice(calculateTotalPrice(placeOrderRequest))
+				.itemPrice(placeOrderRequest.getItemPrice())
 				.ordered_at(placeOrderRequest.getOrdered_at())
 				.orderStatus(placeOrderRequest.getOrderStatus())
 				.address(placeOrderRequest.getAddress())
@@ -99,7 +100,7 @@ public class OrderlServiceImpl implements OrderService{
 				updatedOrder.get().setAddress(updateOrderRequest.getAddress());
 				updatedOrder.get().setOrderStatus(updateOrderRequest.getOrderStatus());
 				updatedOrder.get().setDeliveryTime(updateOrderRequest.getUpdatedAt());
-				updatedOrder.get().setTotalPrice(updateOrderRequest.getTotalPrice());
+				updatedOrder.get().setItemPrice(updateOrderRequest.getTotalPrice());
 			return orderRepository.save(updatedOrder.get());
 			}
 

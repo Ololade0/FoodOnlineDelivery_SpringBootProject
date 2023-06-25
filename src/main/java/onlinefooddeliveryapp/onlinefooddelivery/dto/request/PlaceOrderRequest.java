@@ -19,6 +19,7 @@ public class PlaceOrderRequest {
         private String restaurantId;
 
         private LocalDateTime deliveryTime;
+        private BigDecimal itemPrice;
         private BigDecimal totalPrice;
         private Integer quantity;
         private LocalDateTime ordered_at;

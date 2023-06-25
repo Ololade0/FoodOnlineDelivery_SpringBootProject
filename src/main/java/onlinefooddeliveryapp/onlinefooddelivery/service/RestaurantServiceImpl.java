@@ -43,7 +43,7 @@ public class RestaurantServiceImpl implements RestaurantService {
         if (foundRestaurant.isPresent()) {
             return foundRestaurant.get();
         } else {
-            throw new RestaurantCannotBeFound("Restuarant with " + restaurantId + "cannot ne found");
+            throw new RestaurantCannotBeFound("Restuarant with " + restaurantId + " cannot be found");
 
         }
     }
@@ -54,7 +54,7 @@ public class RestaurantServiceImpl implements RestaurantService {
         if (foundRestaurant.isPresent()) {
             return foundRestaurant.get();
         } else {
-            throw new RestaurantCannotBeFound("Restuarant with " + restaurantName + "cannot ne found");
+            throw new RestaurantCannotBeFound("Restuarant with " + restaurantName + " cannot be found");
 
         }
     }

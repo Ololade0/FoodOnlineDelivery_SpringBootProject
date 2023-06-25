@@ -60,8 +60,8 @@ public class Controller {
         return new ResponseEntity<>(savedRestaurant, HttpStatus.OK);
     }
 
-    @GetMapping("id/{restaurantId}")
-    public ResponseEntity<?> userCanBrowseRestaurantById(String userId, @PathVariable String restaurantId )  {
+    @GetMapping("/{userId}/{restaurantId}")
+    public ResponseEntity<?> userCanBrowseRestaurantById(@PathVariable String userId, @PathVariable String restaurantId )  {
         Restaurants savedRestaurant = userService.userCanBrowseRestaurantById(userId,restaurantId);
         return new ResponseEntity<>(savedRestaurant, HttpStatus.OK);
     }
@@ -70,8 +70,8 @@ public class Controller {
 
 
 
-    @GetMapping("name=/{restaurantName}")
-    public ResponseEntity<?> browseRestaurantName(@RequestBody  String userId, @PathVariable String restaurantName)  {
+    @GetMapping("name/{userId}/{restaurantName}")
+    public ResponseEntity<?> browseRestaurantName(@PathVariable  String userId, @PathVariable String restaurantName)  {
         Restaurants restaurants = userService.userCanBrowseRestaurantByRestaurantName(userId, restaurantName);
         return new ResponseEntity<>(restaurants, HttpStatus.OK);
     }
@@ -80,14 +80,14 @@ public class Controller {
 
 
     @PostMapping("/placeOrder")
-    public ResponseEntity<?> userCanPlaceOrderInARestaurant(@RequestBody PlaceOrderRequest placeOrderRequest) throws OrderCannotBeFoundException, OrderAlreadyExistException, OrderAlreadyExistException {
+    public ResponseEntity<?> userCanPlaceOrderInARestaurant(@RequestBody PlaceOrderRequest placeOrderRequest) throws OrderCannotBeFoundException,  OrderAlreadyExistException {
         Users placeOrder = userService.userCanPlaceOrderInARestaurant(placeOrderRequest);
         return new ResponseEntity<>(placeOrder, HttpStatus.OK);
     }
 
-    @GetMapping("menuitem/{restaurantId}")
-    public ResponseEntity<?> userCanViewRestaurantMenu(@RequestBody String userId,@PathVariable String restaurantId) {
-        List<MenuItems> menuItemsList = userService.userCanViewRestaurantMenu(userId, restaurantId);
+    @GetMapping("menuitem/{restaurantId}/{userId}")
+    public ResponseEntity<?> userCanViewRestaurantMenu(@PathVariable String restaurantId,@PathVariable String userId) {
+        List<MenuItems> menuItemsList = userService.userCanViewRestaurantMenu(restaurantId, userId);
         return new ResponseEntity<>(menuItemsList, HttpStatus.OK);
     }
 

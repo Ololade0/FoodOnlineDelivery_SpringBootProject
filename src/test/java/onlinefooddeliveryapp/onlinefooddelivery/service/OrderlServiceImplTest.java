@@ -34,7 +34,8 @@ class OrderlServiceImplTest {
                 .quantity(10)
                 .ordered_at(LocalDateTime.now())
                 .orderStatus(OrderStatus.PLACED_ORDER)
-                .totalPrice(BigDecimal.valueOf(2000))
+                .itemPrice(BigDecimal.valueOf(2000))
+                .totalPrice(BigDecimal.valueOf(20000))
                 .deliveryTime(LocalDateTime.now())
                 .address(Address.builder()
                         .area("Yaba Area")
@@ -60,7 +61,8 @@ class OrderlServiceImplTest {
                     .quantity(10)
                     .ordered_at(LocalDateTime.now())
                     .orderStatus(OrderStatus.PLACED_ORDER)
-                    .totalPrice(BigDecimal.valueOf(2000))
+                    .itemPrice(BigDecimal.valueOf(2000))
+                    .totalPrice(BigDecimal.valueOf(20000))
                     .deliveryTime(LocalDateTime.now())
                     .address(Address.builder()
                             .area("Yaba Area")
@@ -73,7 +75,7 @@ class OrderlServiceImplTest {
             orderService.placedOrders(placeOrderRequest);
 
             assertEquals(OrderStatus.PLACED_ORDER,savedOrder.getOrderStatus());
-            assertEquals(BigDecimal.valueOf(2000),savedOrder.getTotalPrice());
+            assertEquals(BigDecimal.valueOf(2000),savedOrder.getItemPrice());
             assertEquals("Nigeria", savedOrder.getAddress().getCountry());
             assertEquals("No 31", savedOrder.getAddress().getHouseNumber());
             assertThat(savedOrder.getId()).isNotNull();
@@ -135,7 +137,7 @@ class OrderlServiceImplTest {
         Order updatedOrder =  orderService.updateOrder(updateOrder, updateOrder.getOrderId());
         assertEquals("Lekki Area", updatedOrder.getAddress().getArea());
         assertEquals(OrderStatus.PACKAGED, updatedOrder.getOrderStatus());
-        assertEquals(BigDecimal.valueOf(3000), updatedOrder.getTotalPrice());
+        assertEquals(BigDecimal.valueOf(3000), updatedOrder.getItemPrice());
 
         System.out.println("updated order is" + updatedOrder);
 

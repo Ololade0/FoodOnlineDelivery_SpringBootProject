@@ -21,6 +21,7 @@ public class Order {
         private String id;
 
         private LocalDateTime deliveryTime;
+         private BigDecimal itemPrice;
          private BigDecimal totalPrice;
          private Integer quantity;
         private LocalDateTime ordered_at;

@@ -212,7 +212,7 @@ class RestaurantServiceImplTest {
                 .build();
        Users userThatPlacedOrders =  userService.userCanPlaceOrderInARestaurant(placeOrderRequest);
        assertThat(userThatPlacedOrders.getOrdersList()).isNotNull();
-        assertEquals(BigDecimal.valueOf(20000), userThatPlacedOrders.getOrdersList().get(0).getTotalPrice());
+        assertEquals(BigDecimal.valueOf(20000), userThatPlacedOrders.getOrdersList().get(0).getItemPrice());
 
 
     }
