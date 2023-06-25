@@ -36,10 +36,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public Users signUpUser(SignUpUserRequest signUpUserRequest) {
-//        Optional<Users> foundUser = userRepository.findUsersByEmail(signUpUserRequest.getEmail());
-//        if (foundUser.isPresent()) {
-//            throw new UserCannotBeFoundException("User with email : " + foundUser.get().getEmail() + "already exist");
-//        } else {
+        Optional<Users> foundUser = userRepository.findUsersByEmail(signUpUserRequest.getEmail());
+        if (foundUser.isPresent()) {
+            throw new UserCannotBeFoundException("User with email : " + foundUser.get().getEmail() + "already exist");
+        } else {
             Users signUser = Users.builder()
                     .email(signUpUserRequest.getEmail())
                     .firstName(signUpUserRequest.getFirstName())
@@ -48,11 +48,13 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                     .phoneNo(signUpUserRequest.getPhoneNo())
                     .roleHashSet(new HashSet<>())
                     .build();
-        Role userRole = new Role(RoleType.ROLE_USER);
-        userRole = roleService.save(userRole);
-        signUser.getRoleHashSet().add(userRole);
-        return userRepository.save(signUser);
+            Role userRole = new Role(RoleType.ROLE_USER);
+            userRole = roleService.save(userRole);
+            signUser.getRoleHashSet().add(userRole);
+            return userRepository.save(signUser);
         }
+
+    }
 
     @Override
     public Users findUserByEmail(String email) {

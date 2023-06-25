@@ -16,6 +16,7 @@ import java.time.LocalDateTime;
 @ToString
 public class PlaceOrderRequest {
         private String id;
+        private String orderId;
         private String restaurantId;
 
         private LocalDateTime deliveryTime;

@@ -28,10 +28,10 @@ public class OrderlServiceImpl implements OrderService{
 	
 	@Override
 	public Order placedOrders(PlaceOrderRequest placeOrderRequest) throws OrderAlreadyExistException {
-//		Optional<Order> existingOrder = orderRepository.findBy(order.getId());
-//		if(existingOrder.isPresent()){
-//			throw new OrderAlreadyExistException("Order alraedy exist");
-//		}
+		Optional<Order> existingOrder = orderRepository.findById(placeOrderRequest.getOrderId());
+		if(existingOrder.isPresent()){
+			throw new OrderAlreadyExistException("Order alraedy exist");
+		}
 		Order placedOrder = Order.builder()
 				.quantity(placeOrderRequest.getQuantity())
 				.deliveryTime(placeOrderRequest.getDeliveryTime())
