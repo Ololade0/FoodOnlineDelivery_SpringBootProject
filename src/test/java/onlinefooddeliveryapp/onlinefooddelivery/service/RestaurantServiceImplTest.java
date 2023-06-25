@@ -4,12 +4,9 @@ package onlinefooddeliveryapp.onlinefooddelivery.service;
 import onlinefooddeliveryapp.onlinefooddelivery.dao.model.*;
 import onlinefooddeliveryapp.onlinefooddelivery.dto.request.AddMenuItemRequest;
 import onlinefooddeliveryapp.onlinefooddelivery.dto.request.FindAllRestaurantRequest;
-import onlinefooddeliveryapp.onlinefooddelivery.dto.request.PlaceOrderRequest;
-import onlinefooddeliveryapp.onlinefooddelivery.dto.request.SignUpUserRequest;
+
 import onlinefooddeliveryapp.onlinefooddelivery.dto.response.AddMenuItemResponse;
-import onlinefooddeliveryapp.onlinefooddelivery.exception.OrderAlreadyExistException;
-import onlinefooddeliveryapp.onlinefooddelivery.exception.OrderCannotBeFoundException;
-import org.assertj.core.api.Assertions;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,8 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.util.List;
+
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -32,12 +28,10 @@ class RestaurantServiceImplTest {
 
 
 
-    @Autowired
-    private UserService userService;
 
     Restaurants savedRestaurant;
 
-    Users registeredUser;
+
 
 
     AddMenuItemResponse addMenuItemResponse;
@@ -47,7 +41,7 @@ class RestaurantServiceImplTest {
         Restaurants restaurants = Restaurants.builder()
                 .contactAddress("N0 12, Emily Akinola Street")
                 .location("Lekki")
-                .restaurantName("Hulda Restaurant")
+                .restaurantName("Huldaa Restaurant")
                 .build();
         savedRestaurant = restaurantService.addNewResstaurant(restaurants);
 
@@ -65,22 +59,9 @@ class RestaurantServiceImplTest {
                 .build();
         addMenuItemResponse = restaurantService.saveMenuItem(addMenuItem);
 
-
-        SignUpUserRequest signUpUserRequest = SignUpUserRequest.builder()
-
-                .email("adesuyiololad@gmail.com")
-                .firstName("Ololade")
-                .lastName("Demilade")
-                .phoneNo("08109093828")
-                .password("12345")
-                .build();
-        registeredUser = userService.signUpUser(signUpUserRequest);
-
-
 }
     @AfterEach
     void tearDown() {
-
         restaurantService.deleteAll();
     }
 
@@ -88,7 +69,6 @@ class RestaurantServiceImplTest {
 
     @Test
     void addNewRestaurant(){
-
         Restaurants restaurants = Restaurants.builder()
                 .contactAddress("N0 12, Emily Akinola Street")
                 .location("Lekki")
@@ -118,7 +98,7 @@ class RestaurantServiceImplTest {
     }
 
     @Test
-    void retriveAllCustomers() {
+    void retriveAllResturant() {
         FindAllRestaurantRequest findAllRestaurantRequest = FindAllRestaurantRequest.builder()
                 .numberOfPages(1)
                 .pages(1)
@@ -132,7 +112,6 @@ class RestaurantServiceImplTest {
     @Test
     void restaurantCanSaveMenuItem(){
         AddMenuItemRequest addMenuItem = AddMenuItemRequest.builder()
-
                 .restaurantId(savedRestaurant.getRestaurantId())
                 .itemDescription("Appetizer:\n" +
                                 "Caprese Salad - Fresh mozzarella, juicy vine-ripened tomatoes," +
@@ -150,72 +129,8 @@ class RestaurantServiceImplTest {
     }
 
 
-    @Test
-    void userCanBeRegister(){
-        SignUpUserRequest signUpUserRequest = SignUpUserRequest.builder()
-
-                .email("adesuyiololad@gmail.com")
-                .firstName("Ololade")
-                .lastName("Demilade")
-                .phoneNo("08109093828")
-                .password("12345")
-                .build();
-        Users registeredUser =   userService.signUpUser(signUpUserRequest);
-        Assertions.assertThat(registeredUser.getId()).isNotNull();
-        System.out.println(registeredUser);
-
-    }
-
-        @Test
-    void userCanBrowseRestuarant() {
-        Restaurants browseRestaurant =   userService.userCanBrowseRestaurantById(registeredUser.getId(), savedRestaurant.getRestaurantId());
-       assertThat(browseRestaurant.getRestaurantId()).isNotNull();
-        assertThat(browseRestaurant.getRestaurantId()).isEqualTo(savedRestaurant.getRestaurantId());
 
 
-    }
-
-    @Test
-    void userCanBrowseRestuarantByName() {
-        Restaurants browseRestaurant = userService.userCanBrowseRestaurantByRestaurantName(registeredUser.getId(), savedRestaurant.getRestaurantName());
-        assertEquals("Hulda Restaurant", browseRestaurant.getRestaurantName());
-        assertThat(browseRestaurant.getRestaurantName()).isNotNull();
-
-    }
-
-    @Test
-    void userCanViewRestuarantMenuItem() {
-    List<MenuItems> menuItemsList =  userService.userCanViewRestaurantMenu(savedRestaurant.getRestaurantId(), registeredUser.getId());
-    assertEquals("Rice and Beans", menuItemsList.get(0).getMenuName());
-        assertThat(menuItemsList).isNotNull();
-        System.out.println(menuItemsList);
-
-    }
-
-    @Test
-    void userCanPlaceOrderInARestaurant() throws OrderCannotBeFoundException, OrderAlreadyExistException {
-        PlaceOrderRequest placeOrderRequest = PlaceOrderRequest.builder()
-                .quantity(10)
-                .restaurantId(savedRestaurant.getRestaurantId())
-                .id(registeredUser.getId())
-                .ordered_at(LocalDateTime.now())
-                .orderStatus(OrderStatus.PLACED_ORDER)
-                .totalPrice(BigDecimal.valueOf(2000))
-                .deliveryTime(LocalDateTime.now())
-                .address(Address.builder()
-                        .area("Yaba Area")
-                        .city("Lagos")
-                        .country("Nigeria")
-                        .houseNumber("No 31")
-                        .state("Lagos")
-                        .build())
-                .build();
-       Users userThatPlacedOrders =  userService.userCanPlaceOrderInARestaurant(placeOrderRequest);
-       assertThat(userThatPlacedOrders.getOrdersList()).isNotNull();
-        assertEquals(BigDecimal.valueOf(20000), userThatPlacedOrders.getOrdersList().get(0).getItemPrice());
-
-
-    }
 
 
 

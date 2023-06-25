@@ -7,7 +7,9 @@ import onlinefooddeliveryapp.onlinefooddelivery.dao.model.Restaurants;
 import onlinefooddeliveryapp.onlinefooddelivery.dao.model.Users;
 import onlinefooddeliveryapp.onlinefooddelivery.dto.request.PlaceOrderRequest;
 import onlinefooddeliveryapp.onlinefooddelivery.dto.request.SignUpUserRequest;
+import onlinefooddeliveryapp.onlinefooddelivery.dto.request.UpdateUserProfileRequest;
 import onlinefooddeliveryapp.onlinefooddelivery.dto.request.UserLoginRequestModel;
+import onlinefooddeliveryapp.onlinefooddelivery.dto.response.UpdateUserResponse;
 import onlinefooddeliveryapp.onlinefooddelivery.exception.OrderAlreadyExistException;
 import onlinefooddeliveryapp.onlinefooddelivery.exception.OrderCannotBeFoundException;
 import onlinefooddeliveryapp.onlinefooddelivery.exception.UserCannotBeFoundException;
@@ -27,7 +29,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/v1/auth")
-public class Controller {
+public class UserController {
 
     private final UserService userService;
     private final RestaurantService restaurantService;
@@ -52,6 +54,43 @@ public class Controller {
         final String token = tokenProvider.generateJWTToken(authentication);
         Users user = userService.findUserByEmail(loginRequest.getEmail());
         return new ResponseEntity<>(new AuthToken(token, user.getId()), HttpStatus.OK);
+    }
+
+
+    @GetMapping("user/{id}")
+    public ResponseEntity<?> findUserById(@PathVariable String id){
+        Users user = userService.findUserByuserId(id);
+        return new ResponseEntity<>(user, HttpStatus.CREATED);
+    }
+
+    @GetMapping("user/{email}")
+    public ResponseEntity<?> findUserByEmail(@PathVariable String email){
+        Users user = userService.findUserByEmail(email);
+        return new ResponseEntity<>(user, HttpStatus.CREATED);
+    }
+
+    @GetMapping("user/{name}")
+    public ResponseEntity<?> findUserByName(@PathVariable String name){
+        Users user = userService.findUserByName(name);
+        return new ResponseEntity<>(user, HttpStatus.CREATED);
+    }
+
+
+    @DeleteMapping("deleteuser/{id}")
+    public ResponseEntity<?> deleteById(@PathVariable String id){
+        return new ResponseEntity<>(userService.deleteUserById(id), HttpStatus.CREATED);
+    }
+
+    @DeleteMapping("/deleteAll")
+    public ResponseEntity<?> deleteAllUsers(){
+        return new ResponseEntity<>(userService.deleteAllUsers(), HttpStatus.CREATED);
+    }
+
+
+    @PutMapping("/updateuser")
+    public ResponseEntity<?> updateUsers(@RequestBody UpdateUserProfileRequest updateUserProfile){
+        UpdateUserResponse updatedUser = userService.updateUserProfile(updateUserProfile);
+        return new ResponseEntity<>(updatedUser, HttpStatus.CREATED);
     }
 
     @PostMapping("/restaurant")

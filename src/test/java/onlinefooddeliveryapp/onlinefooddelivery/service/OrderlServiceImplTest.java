@@ -46,6 +46,7 @@ class OrderlServiceImplTest {
                         .build())
                 .build();
         savedOrder =  orderService.placedOrders(placeOrderRequest);
+        System.out.println(savedOrder);
 
     }
 
@@ -72,29 +73,41 @@ class OrderlServiceImplTest {
                             .state("Lagos")
                             .build())
                     .build();
-            orderService.placedOrders(placeOrderRequest);
-
+          savedOrder =   orderService.placedOrders(placeOrderRequest);
             assertEquals(OrderStatus.PLACED_ORDER,savedOrder.getOrderStatus());
             assertEquals(BigDecimal.valueOf(2000),savedOrder.getItemPrice());
             assertEquals("Nigeria", savedOrder.getAddress().getCountry());
             assertEquals("No 31", savedOrder.getAddress().getHouseNumber());
-            assertThat(savedOrder.getId()).isNotNull();
-            System.out.println(savedOrder);
+            assertThat(savedOrder.getOrderId()).isNotNull();
+
 
 
     }
 
     @Test
     void retriveOrder() throws OrderCannotBeFoundException {
-        Order foundOrder = orderService.retriveOrder(savedOrder.getId());
-        assertThat(foundOrder.getId()).isEqualTo(savedOrder.getId());
+        Order foundOrder = orderService.retriveOrder(savedOrder.getOrderId());
+        assertThat(foundOrder.getOrderId()).isEqualTo(savedOrder.getOrderId());
         assertThat(foundOrder).isNotNull();
 
     }
 
     @Test
+    void retrieveAllOrders() {
+        FindAllOrderRequest findAllOrderRequest = FindAllOrderRequest.builder()
+                .numberOfPages(1)
+                .pages(1)
+                .build();
+        Page<Order> foundOrder =
+                orderService.retrieveAllOrders(findAllOrderRequest);
+        assertThat(foundOrder.getTotalElements()).isNotNull();
+        assertEquals(1L, foundOrder.getTotalElements());
+    }
+
+
+    @Test
     void deleteOrder() throws OrderCannotBeFoundException {
-     String deletedOrder =   orderService.deleteOrder(savedOrder.getId());
+     String deletedOrder =   orderService.deleteOrder(savedOrder.getOrderId());
         assertEquals("Orders successfully removed", deletedOrder);
 
     }
@@ -106,27 +119,17 @@ class OrderlServiceImplTest {
 
     }
 
-    @Test
-    void retrieveAllOrders() {
-        FindAllOrderRequest findAllOrderRequest = FindAllOrderRequest.builder()
-                .numberOfPages(1)
-                .pages(1)
-                .build();
-        Page<Order> foundOrder =
-        orderService.retrieveAllOrders(findAllOrderRequest);
-        assertThat(foundOrder.getTotalElements()).isNotNull();
-        assertEquals(1L, foundOrder.getTotalElements());
-    }
 
 
     @Test
     void updateOrder() throws OrderCannotBeFoundException {
         UpdateOrderRequest updateOrder = UpdateOrderRequest.builder()
-                .orderId(savedOrder.getId())
+                .orderId(savedOrder.getOrderId())
                 .updatedAt(LocalDateTime.now())
                 .orderStatus(OrderStatus.PACKAGED)
                 .totalPrice(BigDecimal.valueOf(3000))
                 .address(Address.builder()
+                        .addressId(savedOrder.getAddress().getAddressId())
                         .area("Lekki Area")
                         .city("Ibadan")
                         .country("Ghana")
@@ -138,9 +141,6 @@ class OrderlServiceImplTest {
         assertEquals("Lekki Area", updatedOrder.getAddress().getArea());
         assertEquals(OrderStatus.PACKAGED, updatedOrder.getOrderStatus());
         assertEquals(BigDecimal.valueOf(3000), updatedOrder.getItemPrice());
-
-        System.out.println("updated order is" + updatedOrder);
-
 
 
     }

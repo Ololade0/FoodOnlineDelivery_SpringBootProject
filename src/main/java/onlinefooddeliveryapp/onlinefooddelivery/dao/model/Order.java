@@ -18,8 +18,7 @@ import java.time.LocalDateTime;
 @Document("Orders")
 public class Order {
         @Id
-        private String id;
-
+        private String orderId;
         private LocalDateTime deliveryTime;
          private BigDecimal itemPrice;
          private BigDecimal totalPrice;
