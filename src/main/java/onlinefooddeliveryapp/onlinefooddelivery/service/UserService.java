@@ -41,5 +41,5 @@ public interface UserService {
     Users userCanPlaceOrderInARestaurant(PlaceOrderRequest placeOrderRequest) throws OrderCannotBeFoundException,  OrderAlreadyExistException;
 
 
-
+    Page<Restaurants> userCanBrowseAllRestaurants(FindAllRestaurantRequest findAllRestaurantRequest, String id);
 }

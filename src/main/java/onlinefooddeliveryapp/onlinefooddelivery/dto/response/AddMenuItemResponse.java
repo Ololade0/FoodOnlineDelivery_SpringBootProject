@@ -15,6 +15,6 @@ public class AddMenuItemResponse {
     private String menuId;
     private String menuDescription;
     private BigDecimal price;
-    private String name;
+    private String menuName;
     private String restaurantId;
 }

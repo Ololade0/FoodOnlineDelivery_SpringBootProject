@@ -5,9 +5,11 @@ import onlinefooddeliveryapp.onlinefooddelivery.dao.model.MenuItems;
 import onlinefooddeliveryapp.onlinefooddelivery.dao.repository.MenuItemRepository;
 import onlinefooddeliveryapp.onlinefooddelivery.dto.request.AddMenuItemRequest;
 import onlinefooddeliveryapp.onlinefooddelivery.dto.request.UpdateMenuRequest;
+import onlinefooddeliveryapp.onlinefooddelivery.exception.MenuAlreadyExistException;
 import onlinefooddeliveryapp.onlinefooddelivery.exception.MenuItemCannotBeFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -16,22 +18,29 @@ public class MenuItemServiceImpl implements MenuItemService {
     private final MenuItemRepository menuItemRepository;
 
     @Override
-    public MenuItems addMenu(AddMenuItemRequest addMenuItemRequest) {
-        MenuItems items = MenuItems.builder()
-                .itemDescription(addMenuItemRequest.getItemDescription())
-                .menuName(addMenuItemRequest.getName())
-                .price(addMenuItemRequest.getPrice())
-                .build();
-        return menuItemRepository.save(items);
+    public MenuItems addMenu(AddMenuItemRequest addMenuItemRequest) throws MenuAlreadyExistException {
+//        Optional<MenuItems> existingMenu = menuItemRepository.findMenuItemsByMenuName(addMenuItemRequest.getName());
+//        if (existingMenu.isPresent()) {
+//            throw new MenuAlreadyExistException("Menu with name :" + existingMenu + "already exist");
+//
+//        }
+//        else {
+            MenuItems items = MenuItems.builder()
+                    .itemDescription(addMenuItemRequest.getItemDescription())
+                    .menuName(addMenuItemRequest.getName())
+                    .price(addMenuItemRequest.getPrice())
+                    .build();
+            return menuItemRepository.save(items);
+//        }
     }
-
 
     @Override
     public MenuItems viewMenuItemByMenuName(String menuName) throws MenuItemCannotBeFoundException {
         Optional<MenuItems> foundMenu = menuItemRepository.findMenuItemsByMenuName(menuName);
         if (foundMenu.isPresent()) {
             return foundMenu.get();
-        } else {
+        }
+        else {
             throw new MenuItemCannotBeFoundException("Menu cannot be found");
         }
     }
@@ -67,9 +76,15 @@ public class MenuItemServiceImpl implements MenuItemService {
             updatedMenuItem.get().setPrice(updateMenuRequest.getPrice());
             menuItemRepository.save(updatedMenuItem.get());
             return "MenuItem successfully updated";
-        } else {
+        }
+        else {
             throw new MenuItemCannotBeFoundException("Menu with " + menuName + " cannot be found");
         }
+    }
+
+    @Override
+    public void deleteAll() {
+        menuItemRepository.deleteAll();
     }
 
 }

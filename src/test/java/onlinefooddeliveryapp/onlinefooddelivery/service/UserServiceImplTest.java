@@ -5,6 +5,7 @@ import onlinefooddeliveryapp.onlinefooddelivery.dao.model.*;
 import onlinefooddeliveryapp.onlinefooddelivery.dto.request.*;
 import onlinefooddeliveryapp.onlinefooddelivery.dto.response.AddMenuItemResponse;
 import onlinefooddeliveryapp.onlinefooddelivery.dto.response.UserLoginResponse;
+import onlinefooddeliveryapp.onlinefooddelivery.exception.MenuAlreadyExistException;
 import onlinefooddeliveryapp.onlinefooddelivery.exception.OrderAlreadyExistException;
 import onlinefooddeliveryapp.onlinefooddelivery.exception.OrderCannotBeFoundException;
 import org.assertj.core.api.Assertions;
@@ -37,7 +38,7 @@ class UserServiceImplTest {
     private UserService userServices;
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws MenuAlreadyExistException {
 
         SignUpUserRequest signUpUserRequest = SignUpUserRequest.builder()
 
@@ -51,14 +52,15 @@ class UserServiceImplTest {
 
 
 
-        Restaurants restaurants = Restaurants.builder()
+        RegisterRestaurantRequest registerRestaurantRequest= RegisterRestaurantRequest.builder()
                 .contactAddress("N0 12, Emily Akinola Street")
                 .location("Lekki")
-                .restaurantName("Dami's Restaurant")
+                .restaurantName("Huldaa Restaurant")
                 .build();
-        savedRestaurant = restaurantService.addNewResstaurant(restaurants);
+        savedRestaurant = restaurantService.addNewResstaurant(registerRestaurantRequest);
 
-            AddMenuItemRequest addMenuItem = AddMenuItemRequest.builder()
+
+        AddMenuItemRequest addMenuItem = AddMenuItemRequest.builder()
                     .restaurantId(savedRestaurant.getRestaurantId())
                     .itemDescription("Appetizer:\n" +
                             "Caprese Salad - Fresh mozzarella, juicy vine-ripened tomatoes," +
@@ -66,8 +68,6 @@ class UserServiceImplTest {
                             "balsamic glaze.")
                     .name("Rice and Beans")
                     .price(BigDecimal.valueOf(4000))
-
-
                     .build();
          addMenuItemResponse = restaurantService.saveMenuItem(addMenuItem);
 
@@ -161,14 +161,15 @@ class UserServiceImplTest {
 
     @Test
     void addNewRestaurant(){
-        Restaurants restaurants = Restaurants.builder()
+        RegisterRestaurantRequest registerRestaurantRequest= RegisterRestaurantRequest.builder()
                 .contactAddress("N0 12, Emily Akinola Street")
                 .location("Lekki")
-                .restaurantName("Hulda Restaurant")
-
+                .restaurantName("Huldaa Restaurant")
                 .build();
-        Restaurants savedRestaurant = restaurantService.addNewResstaurant(restaurants);
-        assertEquals("Hulda Restaurant", savedRestaurant.getRestaurantName());
+        savedRestaurant = restaurantService.addNewResstaurant(registerRestaurantRequest);
+
+
+        assertEquals("Huldaa Restaurant", savedRestaurant.getRestaurantName());
         assertEquals("N0 12, Emily Akinola Street", savedRestaurant.getContactAddress());
         System.out.println(savedRestaurant);
     }
@@ -188,10 +189,24 @@ class UserServiceImplTest {
     @Test
     void userCanBrowseRestuarantByName() {
         Restaurants browseRestaurant = userServices.userCanBrowseRestaurantByRestaurantName(registeredUser.getId(), savedRestaurant.getRestaurantName());
-        assertEquals("Dami's Restaurant", browseRestaurant.getRestaurantName());
+        assertEquals("Huldaa Restaurant", browseRestaurant.getRestaurantName());
         assertThat(browseRestaurant.getRestaurantName()).isNotNull();
 
     }
+
+    @Test
+    void userCanBrowseAllRestuarant() {
+        FindAllRestaurantRequest findAllRestaurantRequest = FindAllRestaurantRequest.builder()
+                .numberOfPages(1)
+                .userId(registeredUser.getId())
+                .pages(1)
+                .build();
+        Page<Restaurants> restaurantsPage = userServices.userCanBrowseAllRestaurants(findAllRestaurantRequest, registeredUser.getId());
+        assertEquals(1L, restaurantsPage.getTotalPages());
+        assertThat(restaurantsPage.getTotalElements()).isGreaterThan(0);
+        assertThat(restaurantsPage.getContent());
+    }
+
 
     @Test
     void userCanViewRestuarantMenuItem() {

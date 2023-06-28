@@ -4,6 +4,7 @@ package onlinefooddeliveryapp.onlinefooddelivery.service;
 import onlinefooddeliveryapp.onlinefooddelivery.dao.model.MenuItems;
 import onlinefooddeliveryapp.onlinefooddelivery.dto.request.AddMenuItemRequest;
 import onlinefooddeliveryapp.onlinefooddelivery.dto.request.UpdateMenuRequest;
+import onlinefooddeliveryapp.onlinefooddelivery.exception.MenuAlreadyExistException;
 import onlinefooddeliveryapp.onlinefooddelivery.exception.MenuItemCannotBeFoundException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,13 +25,13 @@ class MenuItemServiceImplTest {
     private MenuItemService menuItemService;
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws MenuAlreadyExistException {
         AddMenuItemRequest addMenuItemRequest = AddMenuItemRequest.builder()
                 .itemDescription("Appetizer:\n" +
                         "Caprese Salad - Fresh mozzarella, juicy vine-ripened tomatoes," +
                         " and fragrant basil drizzled with " +
                         "balsamic glaze.")
-                .name("Rice and Beans")
+                .name("Beans")
                 .price(BigDecimal.valueOf(4000))
 
                 .build();
@@ -39,21 +40,21 @@ class MenuItemServiceImplTest {
 
     @AfterEach
     void tearDown() {
+        menuItemService.deleteAll();
     }
 
     @Test
-    void addMenu() {
+    void addMenu() throws MenuAlreadyExistException {
         AddMenuItemRequest addMenuItemRequest = AddMenuItemRequest.builder()
                         .itemDescription("Appetizer:\n" +
                                 "Caprese Salad - Fresh mozzarella, juicy vine-ripened tomatoes," +
                                 " and fragrant basil drizzled with " +
                                 "balsamic glaze.")
-                        .name("Rice and Beans")
+                        .name("Rice dodo")
                         .price(BigDecimal.valueOf(4000))
-
                 .build();
       MenuItems savedMenuItems =  menuItemService.addMenu(addMenuItemRequest);
-        assertEquals("Rice and Beans", savedMenuItems.getMenuName());
+        assertEquals("Rice dodo", savedMenuItems.getMenuName());
 
     }
 
@@ -64,7 +65,7 @@ class MenuItemServiceImplTest {
         MenuItems foundMenuItem = menuItemService.viewMenuItemByMenuName(savedMenuItems.getMenuName());
         assertThat(foundMenuItem).isNotNull();
         assertThat(foundMenuItem.getMenuName()).isEqualTo(foundMenuItem.getMenuName());
-        assertEquals("Rice and Beans", foundMenuItem.getMenuName());
+        assertEquals("Beans", foundMenuItem.getMenuName());
 
     }
 
@@ -74,7 +75,7 @@ class MenuItemServiceImplTest {
         MenuItems foundMenuItem = menuItemService.viewMenuItemByMenuId(savedMenuItems.getItemId());
         assertThat(foundMenuItem).isNotNull();
         assertThat(foundMenuItem.getMenuName()).isEqualTo(foundMenuItem.getMenuName());
-        assertEquals("Rice and Beans", foundMenuItem.getMenuName());
+        assertEquals("Beans", foundMenuItem.getMenuName());
 
     }
 
@@ -88,8 +89,9 @@ class MenuItemServiceImplTest {
     @Test
     public void updateMenuItem() throws MenuItemCannotBeFoundException {
         UpdateMenuRequest updateMenuRequest = UpdateMenuRequest.builder()
+                .itemId(savedMenuItems.getItemId())
                 .updatedAt(LocalDateTime.now())
-                .menuName("Pasta")
+                .menuName(savedMenuItems.getMenuName())
                 .itemDescription("\"Enjoy the rich flavors of our pasta dish," +
                         "This dish is perfect for those looking for a satisfying and healthy meal.\"")
                 .price(BigDecimal.valueOf(40000))

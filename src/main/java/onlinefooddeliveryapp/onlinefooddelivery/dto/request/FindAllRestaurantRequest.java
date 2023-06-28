@@ -8,6 +8,7 @@ import lombok.*;
 @NoArgsConstructor
 @Builder
 public class FindAllRestaurantRequest {
+    private String userId;
     private int numberOfPages;
     private int pages;
 }

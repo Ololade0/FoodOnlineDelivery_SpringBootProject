@@ -5,10 +5,7 @@ import onlinefooddeliveryapp.onlinefooddelivery.dao.model.AuthToken;
 import onlinefooddeliveryapp.onlinefooddelivery.dao.model.MenuItems;
 import onlinefooddeliveryapp.onlinefooddelivery.dao.model.Restaurants;
 import onlinefooddeliveryapp.onlinefooddelivery.dao.model.Users;
-import onlinefooddeliveryapp.onlinefooddelivery.dto.request.PlaceOrderRequest;
-import onlinefooddeliveryapp.onlinefooddelivery.dto.request.SignUpUserRequest;
-import onlinefooddeliveryapp.onlinefooddelivery.dto.request.UpdateUserProfileRequest;
-import onlinefooddeliveryapp.onlinefooddelivery.dto.request.UserLoginRequestModel;
+import onlinefooddeliveryapp.onlinefooddelivery.dto.request.*;
 import onlinefooddeliveryapp.onlinefooddelivery.dto.response.UpdateUserResponse;
 import onlinefooddeliveryapp.onlinefooddelivery.exception.OrderAlreadyExistException;
 import onlinefooddeliveryapp.onlinefooddelivery.exception.OrderCannotBeFoundException;
@@ -16,6 +13,7 @@ import onlinefooddeliveryapp.onlinefooddelivery.exception.UserCannotBeFoundExcep
 import onlinefooddeliveryapp.onlinefooddelivery.security.jwt.TokenProvider;
 import onlinefooddeliveryapp.onlinefooddelivery.service.RestaurantService;
 import onlinefooddeliveryapp.onlinefooddelivery.service.UserService;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -32,7 +30,7 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
-    private final RestaurantService restaurantService;
+
     private final AuthenticationManager authenticationManager;
     private final TokenProvider tokenProvider;
 
@@ -43,18 +41,15 @@ public class UserController {
         return new ResponseEntity<>(user, HttpStatus.CREATED);
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody UserLoginRequestModel loginRequest) throws UserCannotBeFoundException {
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginRequest.getEmail(),
-                        loginRequest.getPassword())
-        );
-        userService.login(loginRequest);
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        final String token = tokenProvider.generateJWTToken(authentication);
-        Users user = userService.findUserByEmail(loginRequest.getEmail());
-        return new ResponseEntity<>(new AuthToken(token, user.getId()), HttpStatus.OK);
+
+    @GetMapping("user/{email}")
+    public ResponseEntity<?> findUserByEmail(@PathVariable String email){
+        Users user = userService.findUserByEmail(email);
+        return new ResponseEntity<>(user, HttpStatus.CREATED);
     }
+
+
+
 
 
     @GetMapping("user/{id}")
@@ -63,11 +58,6 @@ public class UserController {
         return new ResponseEntity<>(user, HttpStatus.CREATED);
     }
 
-    @GetMapping("user/{email}")
-    public ResponseEntity<?> findUserByEmail(@PathVariable String email){
-        Users user = userService.findUserByEmail(email);
-        return new ResponseEntity<>(user, HttpStatus.CREATED);
-    }
 
     @GetMapping("user/{name}")
     public ResponseEntity<?> findUserByName(@PathVariable String name){
@@ -93,11 +83,27 @@ public class UserController {
         return new ResponseEntity<>(updatedUser, HttpStatus.CREATED);
     }
 
-    @PostMapping("/restaurant")
-    public ResponseEntity<?> addNewRestaurant(@RequestBody  Restaurants restaurants)  {
-        Restaurants savedRestaurant = restaurantService.addNewResstaurant(restaurants);
-        return new ResponseEntity<>(savedRestaurant, HttpStatus.OK);
+    @PutMapping("/finduser")
+    public ResponseEntity<?> findAllUsers(@RequestBody FindAllUserRequest findAllUserRequest){
+        Page<Users> findAllUsers = userService.findAllUser(findAllUserRequest);
+        return new ResponseEntity<>(findAllUsers, HttpStatus.CREATED);
     }
+
+
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody UserLoginRequestModel loginRequest) throws UserCannotBeFoundException {
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(loginRequest.getEmail(),
+                        loginRequest.getPassword())
+        );
+        userService.login(loginRequest);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        final String token = tokenProvider.generateJWTToken(authentication);
+        Users user = userService.findUserByEmail(loginRequest.getEmail());
+        return new ResponseEntity<>(new AuthToken(token, user.getId()), HttpStatus.OK);
+    }
+
+
 
     @GetMapping("/{userId}/{restaurantId}")
     public ResponseEntity<?> userCanBrowseRestaurantById(@PathVariable String userId, @PathVariable String restaurantId )  {
@@ -114,6 +120,13 @@ public class UserController {
         Restaurants restaurants = userService.userCanBrowseRestaurantByRestaurantName(userId, restaurantName);
         return new ResponseEntity<>(restaurants, HttpStatus.OK);
     }
+
+    @GetMapping("restaurantPage/{userId}")
+    public ResponseEntity<?> browseRestaurantName(@RequestBody FindAllRestaurantRequest findAllRestaurantRequest, @PathVariable String userId)  {
+        Page<Restaurants> restaurantsPage = userService.userCanBrowseAllRestaurants(findAllRestaurantRequest, userId);
+        return new ResponseEntity<>(restaurantsPage, HttpStatus.OK);
+    }
+
 
 
 

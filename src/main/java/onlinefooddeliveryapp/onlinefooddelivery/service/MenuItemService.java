@@ -4,10 +4,13 @@ package onlinefooddeliveryapp.onlinefooddelivery.service;
 import onlinefooddeliveryapp.onlinefooddelivery.dao.model.MenuItems;
 import onlinefooddeliveryapp.onlinefooddelivery.dto.request.AddMenuItemRequest;
 import onlinefooddeliveryapp.onlinefooddelivery.dto.request.UpdateMenuRequest;
+import onlinefooddeliveryapp.onlinefooddelivery.exception.MenuAlreadyExistException;
 import onlinefooddeliveryapp.onlinefooddelivery.exception.MenuItemCannotBeFoundException;
 
+import java.util.List;
+
 public interface MenuItemService {
-    MenuItems addMenu(AddMenuItemRequest addMenuItemRequest);
+    MenuItems addMenu(AddMenuItemRequest addMenuItemRequest) throws MenuAlreadyExistException;
 
     MenuItems viewMenuItemByMenuName(String menuName) throws MenuItemCannotBeFoundException;
 
@@ -17,4 +20,6 @@ public interface MenuItemService {
 
 
     String updateMenuItem(UpdateMenuRequest updateMenuRequest, String menuName) throws MenuItemCannotBeFoundException;
+
+    void deleteAll();
 }

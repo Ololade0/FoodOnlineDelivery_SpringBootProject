@@ -213,6 +213,22 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     }
 
+    @Override
+    public Page<Restaurants> userCanBrowseAllRestaurants(FindAllRestaurantRequest findAllRestaurantRequest, String id) {
+        Optional<Users> foundUser = userRepository.findById(id);
+        if (foundUser.isPresent()) {
+           return restaurantService.browseAllRestaurant(findAllRestaurantRequest);
+        }
+        else {
+            throw new UserCannotBeFoundException("User cannot be found");
+        }
+
+    }
+
+
+
+
+
 
     @Override
     public UserLoginResponse login(UserLoginRequestModel userLoginRequestModel) {
