@@ -78,7 +78,7 @@ public class RestaurantController {
         return new ResponseEntity<>(deletedMenu, HttpStatus.OK);
     }
 
-    @PostMapping("updateMenu/{restaurantId}")
+    @PutMapping("updateMenu/{restaurantId}")
     public ResponseEntity<?> updateMenuItem(@RequestBody UpdateMenuRequest updateMenuRequest, @PathVariable String restaurantId) throws MenuItemCannotBeFoundException {
         String updatedMenu = restaurantService.updateMenuItem(updateMenuRequest, restaurantId);
         return new ResponseEntity<>(updatedMenu, HttpStatus.OK);
