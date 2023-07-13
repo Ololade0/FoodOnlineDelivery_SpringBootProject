@@ -1,6 +1,7 @@
 package onlinefooddeliveryapp.onlinefooddelivery.service;
 
 
+import lombok.extern.slf4j.Slf4j;
 import onlinefooddeliveryapp.onlinefooddelivery.dao.model.*;
 import onlinefooddeliveryapp.onlinefooddelivery.dto.request.*;
 import onlinefooddeliveryapp.onlinefooddelivery.dto.response.AddMenuItemResponse;
@@ -16,16 +17,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+
 import java.util.List;
+
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
+@Slf4j
 @SpringBootTest
 class UserServiceImplTest {
+
     Users registeredUser;
     AddMenuItemResponse addMenuItemResponse;
     Restaurants savedRestaurant;
@@ -41,7 +47,6 @@ class UserServiceImplTest {
     void setUp() throws MenuAlreadyExistException {
 
         SignUpUserRequest signUpUserRequest = SignUpUserRequest.builder()
-
                 .email("adesuyiololad@gmail.com")
                 .firstName("Ololade")
                 .lastName("Demilade")
@@ -204,7 +209,7 @@ class UserServiceImplTest {
         Page<Restaurants> restaurantsPage = userServices.userCanBrowseAllRestaurants(findAllRestaurantRequest, registeredUser.getId());
         assertEquals(1L, restaurantsPage.getTotalPages());
         assertThat(restaurantsPage.getTotalElements()).isGreaterThan(0);
-        assertThat(restaurantsPage.getContent());
+
     }
 
 
@@ -241,9 +246,8 @@ class UserServiceImplTest {
         assertEquals(BigDecimal.valueOf(1000), userThatPlacedOrders.getOrdersList().get(0).getTotalPrice());
         assertEquals(BigDecimal.valueOf(100), userThatPlacedOrders.getOrdersList().get(0).getItemPrice());
 
-
-
     }
+
 
     public BigDecimal calculateTotalPrice(PlaceOrderRequest placeOrderRequest) {
         BigDecimal total = BigDecimal.ZERO;

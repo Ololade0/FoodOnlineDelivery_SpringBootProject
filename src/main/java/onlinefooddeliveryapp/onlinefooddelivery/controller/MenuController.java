@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 public class MenuController {
     private final MenuItemService menuItemService;
 
-
     @PostMapping("/menu")
     public ResponseEntity<?> addMenu(@NonNull @RequestBody AddMenuItemRequest addMenuItemRequest) throws MenuAlreadyExistException {
         MenuItems menuItems = menuItemService.addMenu(addMenuItemRequest);

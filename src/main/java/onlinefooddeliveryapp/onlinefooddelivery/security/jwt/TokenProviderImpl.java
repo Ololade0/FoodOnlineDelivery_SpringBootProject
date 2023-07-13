@@ -85,6 +85,7 @@ class TokenProviderImpl implements TokenProvider {
                 .signWith(SignatureAlgorithm.HS256, SIGNING_KEY)
                 .compact();
         log.info("Jwts -->{}", jwts);
+        System.out.println("MY JWT IS" +jwts);
         return jwts;
     }
 
